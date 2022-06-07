@@ -4,7 +4,7 @@ import lombok.EqualsAndHashCode;
 
 import javax.persistence.*;
 
-@EqualsAndHashCode
+//@EqualsAndHashCode
 @Entity
 @Table(name="`User`")
 public class User {

@@ -6,9 +6,10 @@ public interface UserService {
     User saveUser(User user);
     List<User> allUsers();
 
-// User updateEmail(User user, String email);
-
+    //sprawdz czy istnieje taki login
     User findByLogin(String login);
+    //sprawdz czy istnieje taki email
     User findByEmail(String email);
-    User updateEmail(User user, String login);
+    //zmiana email
+    User updateEmail(String email);
 }

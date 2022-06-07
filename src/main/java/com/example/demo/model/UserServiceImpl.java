@@ -13,8 +13,6 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private UserService userService1;
 
     private JdbcTemplate jdbcTemplate;
 
@@ -33,12 +31,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateEmail(User user, String email) {
-        User existUser = userService1.findByEmail(email);
-        if(existUser.equals(email))
-
-
-        return existUser;
+    public User updateEmail(String email) {
+        return jdbcTemplate.queryForObject("UPDATE email FROM User WHERE email=?",
+                BeanPropertyRowMapper.newInstance(User.class), email);
     }
 
     @Override
