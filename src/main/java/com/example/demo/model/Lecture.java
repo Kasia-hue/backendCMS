@@ -3,9 +3,6 @@ package com.example.demo.model;
 
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Setter
 
 public class Lecture {
@@ -25,13 +22,13 @@ public class Lecture {
         this.path = path;
     }
 
-    public Lecture(int id, String lectureStart, String lectureEnd, int path, User[] participants) {
-        this.id = id;
-        this.lectureStart = lectureStart;
-        this.lectureEnd = lectureEnd;
-        this.path = path;
-        this.participants = participants;
-    }
+//    public Lecture(int id, String lectureStart, String lectureEnd, int path, User[] participants) {
+//        this.id = id;
+//        this.lectureStart = lectureStart;
+//        this.lectureEnd = lectureEnd;
+//        this.path = path;
+//        this.participants = participants;
+//    }
 
     public int getId() {
         return id;
@@ -49,14 +46,14 @@ public class Lecture {
         return lectureDate;
     }
 
-    public User[] getParticipants() {
-        return participants;
-    }
+//    public User[] getParticipants() {
+//        return participants;
+//    }
 
 
-    public void setParticipants(User[] participants) {
-        this.participants = participants;
-    }
+//    public void setParticipants(User[] participants) {
+//        this.participants = participants;
+//    }
 
     public int getPath() {
         return path;

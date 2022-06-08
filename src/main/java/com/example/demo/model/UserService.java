@@ -8,8 +8,6 @@ public interface UserService {
 
     //sprawdz czy istnieje taki login
     User findByLogin(String login);
-    //sprawdz czy istnieje taki email
-    User findByEmail(String email);
     //zmiana email
-    User updateEmail(String email);
+    User updateEmail(User user, Long id);
 }

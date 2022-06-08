@@ -1,7 +1,5 @@
 package com.example.demo.model;
 
-import lombok.EqualsAndHashCode;
-
 import javax.persistence.*;
 
 //@EqualsAndHashCode
@@ -11,9 +9,9 @@ public class User {
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Long id;
-    @Column(name="`login`", nullable = false)
+    @Column(name="login", nullable = false)
     private String login;
-    @Column(name="`email`", nullable = false)
+    @Column(name="email", nullable = false)
     private String email;
 
     public User(){}

@@ -2,27 +2,29 @@ package com.example.demo.model;
 
 import com.example.demo.repo.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
 
-    @Autowired
     private UserRepository userRepository;
-
-    private JdbcTemplate jdbcTemplate;
+    private final JdbcTemplate jdbcTemplate;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository,  JdbcTemplate jtm) {
         this.userRepository = userRepository;
+        this.jdbcTemplate = jtm;
     }
+
     @Override
     public User saveUser(User user) {
-        return userRepository.save(user);
+        return (User)this.userRepository.save(user);
     }
 
     @Override
@@ -31,24 +33,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User updateEmail(String email) {
-        return jdbcTemplate.queryForObject("UPDATE email FROM User WHERE email=?",
-                BeanPropertyRowMapper.newInstance(User.class), email);
+    public User updateEmail(User user, Long id) {
+        User existingUser = userRepository.findById(id).orElseThrow(
+                () -> new ResourceNotFoundEx("User", "Id", id));
+        existingUser.setEmail(user.getEmail());
+        return userRepository.save(existingUser);
     }
 
     @Override
     public User findByLogin(String login) {
-        return jdbcTemplate.queryForObject("SELECT login FROM User WHERE login=?",
-                BeanPropertyRowMapper.newInstance(User.class), login);
+        return (User)this.jdbcTemplate.queryForObject("SELECT * FROM \"user\" WHERE login = ?", new BeanPropertyRowMapper(User.class), new Object[]{login});
     }
 
-    @Override
     public User findByEmail(String email) {
-        return jdbcTemplate.queryForObject("SELECT email FROM User WHERE email=?",
-                BeanPropertyRowMapper.newInstance(User.class), email);
+        return (User)this.jdbcTemplate.queryForObject("SELECT * FROM \"user\" WHERE email = ?", new BeanPropertyRowMapper(User.class), new Object[]{email});
     }
-
-
 
 
 }
