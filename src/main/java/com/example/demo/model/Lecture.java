@@ -3,34 +3,41 @@ package com.example.demo.model;
 
 import lombok.Setter;
 
-@Setter
+import javax.persistence.*;
 
+@Setter
+@Entity
+@Table(name="`Lecture`")
 public class Lecture {
-    private int id;
+    @Id
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    private Long id;
+    @Column(name = "`lectureStart`")
     private String lectureStart;
+    @Column(name = "`lectureEnd`")
     private String lectureEnd;
+    @Column(name = "`lectureDate`")
     private String lectureDate = "01.06.2022";
+    @Column(name = "`path`")
     private int path;
-    private User[] participants = new User[5];
+    //private User[] participants = new User[5];
 
     public Lecture(){}
 
-    public Lecture(int id, String lectureStart, String lectureEnd, int path) {
-        this.id = id;
+    public Lecture(String lectureStart, String lectureEnd, int path) {
         this.lectureStart = lectureStart;
         this.lectureEnd = lectureEnd;
         this.path = path;
     }
 
-//    public Lecture(int id, String lectureStart, String lectureEnd, int path, User[] participants) {
-//        this.id = id;
+//    public Lecture(String lectureStart, String lectureEnd, int path, User[] participants) {
 //        this.lectureStart = lectureStart;
 //        this.lectureEnd = lectureEnd;
 //        this.path = path;
 //        this.participants = participants;
 //    }
 
-    public int getId() {
+    public Long getId() {
         return id;
     }
 
