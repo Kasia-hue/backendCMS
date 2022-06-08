@@ -25,22 +25,19 @@ public class LectureService {
         this.lectureRepository = lectureRepository;
     }
 
-   // public Lecture saveLecture(Lecture lecture) {
-    //    return (Lecture) this.lectureRepository.save(lecture);
-   // }
-
     public List<Lecture> getAllLectures() {
         return lectureRepository.findAll();
     }
+
+    Lecture[] signUpForLecture1 = new Lecture[5];
+
 
 //    public Lecture saveLecture(Lecture lecture) {
 //        return (Lecture)this.jdbcTemplate.queryForObject("INSERT INTO \"Lecture\" WHERE login = ?", new BeanPropertyRowMapper(User.class), new Object[]{login});
 //    }
 
-//    List<Lecture> allLectures(){
-//        return;
-//    }
 
+//podaje id=1, nie może się ten sam zapisać na prelecje z id 2 i 3.
 
 
 }

@@ -13,7 +13,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/lectures")
 public class LectureController {
-    
+
     LectureService lectureService;
 
     public LectureController(LectureService lectureService) {

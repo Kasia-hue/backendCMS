@@ -10,4 +10,8 @@ public interface UserService {
     User findByLogin(String login);
     //zmiana email
     User updateEmail(User user, Long id);
+    //Zapis na prelekcje
+    User signUp(User user, Long lectureId, String email, String login);
+
+    User cancel(User user, Long lectureId);
 }
