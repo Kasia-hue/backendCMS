@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -54,7 +55,7 @@ public class UserController {
         return new ResponseEntity<User>(userService.updateEmail(user, id), HttpStatus.OK);
     }
     @PutMapping("/signUp/{id}")
-    public ResponseEntity<Boolean> signUpLecture (@PathVariable("id") Long lectureId, @RequestBody User user){
+    public ResponseEntity<Boolean> signUpLecture (@PathVariable("id") Long lectureId, @RequestBody User user) throws IOException {
         if(userService.findUser(user, lectureId)!=null) {
             return new ResponseEntity<Boolean>(false,
                     HttpStatus.IM_USED);
@@ -68,6 +69,7 @@ public class UserController {
             return new ResponseEntity<Boolean>(false,
                     HttpStatus.SEE_OTHER);
         }
+        userService.emailMsg(new LectureUser(user.getId(), lectureId));
         return new ResponseEntity<Boolean>(userService.signUp(user, lectureId), HttpStatus.CREATED);
     }
 

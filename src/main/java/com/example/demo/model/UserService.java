@@ -1,5 +1,6 @@
 package com.example.demo.model;
 
+import java.io.IOException;
 import java.util.List;
 
 public interface UserService {
@@ -17,4 +18,6 @@ public interface UserService {
     LectureUser findUser(User user, String[] id);
     void cancel(User user, Long lectureId);
     int countUser(Long lectureId);
+
+    public boolean emailMsg(LectureUser lectureUser) throws IOException;
 }

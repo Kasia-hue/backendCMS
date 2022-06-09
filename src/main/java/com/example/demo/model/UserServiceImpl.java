@@ -9,10 +9,13 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.yaml.snakeyaml.util.ArrayUtils;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -100,6 +103,21 @@ public class UserServiceImpl implements UserService {
         return jdbcTemplate.queryForObject("SELECT count(*) FROM \"lecture_user\" WHERE LECTURE_ID =?",
                 int.class, new Object[]{lectureId});
     }
+
+    public boolean emailMsg(LectureUser lectureUser) throws IOException {
+        Date nowDate = new Date();
+        String email = "! Witamy na prelekcji nr: ";
+        String filePath = "C:\\Users\\ladym\\IdeaProjects\\demo\\src\\main\\java\\com\\example\\demo\\model\\powiadomienie.txt";
+        try {
+            byte[] strToBytes = (nowDate + " Użytkowniku " + lectureUser.getUserId()+ email +  lectureUser.getLectureId()).getBytes();
+            Files.write(Paths.get(filePath), strToBytes);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+            return true;
+    }
+
+
 
 
 
