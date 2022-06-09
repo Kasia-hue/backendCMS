@@ -1,25 +1,33 @@
 package com.example.demo.model;
 
+import com.example.demo.repo.LectureUserRepository;
 import com.example.demo.repo.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.context.config.ConfigDataResourceNotFoundException;
+import org.apache.tomcat.util.buf.StringUtils;
+import org.springframework.data.domain.Example;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
+import org.yaml.snakeyaml.util.ArrayUtils;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
 
+
     private UserRepository userRepository;
+
+    private LectureUserRepository lectureUserRepository;
     private final JdbcTemplate jdbcTemplate;
 
-    @Autowired
-    public UserServiceImpl(UserRepository userRepository,  JdbcTemplate jtm) {
+    public UserServiceImpl(UserRepository userRepository,  JdbcTemplate jtm, LectureUserRepository lectureUserRepository) {
         this.userRepository = userRepository;
         this.jdbcTemplate = jtm;
+        this.lectureUserRepository = lectureUserRepository;
     }
 
     @Override
@@ -40,43 +48,60 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(existingUser);
     }
 
-
     @Override
     public User findByLogin(String login) {
         return (User)this.jdbcTemplate.queryForObject("SELECT * FROM \"user\" WHERE login = ?",
                 new BeanPropertyRowMapper(User.class), new Object[]{login});
     }
 
-    public User findByEmail(String email) {
+    public User findByEmail(String email) {//tak jak tu
         return (User)this.jdbcTemplate.queryForObject("SELECT * FROM \"user\" WHERE email = ?",
                 new BeanPropertyRowMapper(User.class), new Object[]{email});
     }
 
-    @Override
-    public User signUp(User user, Long lectureId, String email, String login){
-        if(lectureId.equals(1) || lectureId.equals(2) || lectureId.equals(3)  )
-        return (User)this.jdbcTemplate.queryForObject("INSERT INTO \"user\" (signUpLecture1) VALUE {lectureId} WHERE email = ? AND login=?",
-                new BeanPropertyRowMapper(User.class), new Object[]{lectureId}, new Object[]{email}, new Object[]{login});
-        else if(lectureId.equals(4) || lectureId.equals(5) || lectureId.equals(6)  )
-            return (User)this.jdbcTemplate.queryForObject("INSERT INTO \"user\" (signUpLecture2) VALUE {lectureId} WHERE email = ? AND login=?",
-                    new BeanPropertyRowMapper(User.class), new Object[]{lectureId}, new Object[]{email}, new Object[]{login});
-        else
-            return (User)this.jdbcTemplate.queryForObject("INSERT INTO \"user\" (signUpLecture3) VALUE {lectureId} WHERE email = ? AND login=?",
-                    new BeanPropertyRowMapper(User.class), new Object[]{lectureId}, new Object[]{email}, new Object[]{login});
+
+    public LectureUser findUser(User user, Long id){
+        LectureUser lectureUser1 = null;
+        try {
+            lectureUser1 = (LectureUser) jdbcTemplate.queryForObject("SELECT * FROM \"lecture_user\" WHERE USER_ID = ? AND LECTURE_ID  = ?",
+                    new BeanPropertyRowMapper(LectureUser.class), new Object[]{user.getId()}, new Object[]{id});
+        }
+        catch (Exception e){
+
+        }
+        return lectureUser1;
     }
 
-    @Override
-    public User cancel(User user, Long lectureId) {
-        if(lectureId.equals(1) || lectureId.equals(2) || lectureId.equals(3))
-            return (User)this.jdbcTemplate.queryForObject("DELETE FROM \"user\" WHERE signUpLecture1=?",
-                    new BeanPropertyRowMapper(User.class), new Object[]{lectureId});
-        else if(lectureId.equals(4) || lectureId.equals(5) || lectureId.equals(6))
-            return (User)this.jdbcTemplate.queryForObject("DELETE FROM \"user\" WHERE signUpLecture2=?",
-                    new BeanPropertyRowMapper(User.class), new Object[]{lectureId});
-        else
-            return (User)this.jdbcTemplate.queryForObject("DELETE FROM \"user\" WHERE signUpLecture3=?",
-                    new BeanPropertyRowMapper(User.class), new Object[]{lectureId});
+    public LectureUser findUser(User user, String[] id){
+        LectureUser lectureUser1 = null;
+        try {
+            String replacer = String.join(",", id);
+            lectureUser1 = (LectureUser) jdbcTemplate.queryForObject(String.format("SELECT * FROM \"lecture_user\" WHERE USER_ID = ? AND LECTURE_ID IN (%s)", replacer),
+                    new BeanPropertyRowMapper(LectureUser.class), new Object[]{user.getId()});
+        }
+        catch (Exception e){
+
+        }
+        return lectureUser1;
     }
+
+
+    public boolean signUp(User user, Long lectureId){
+        lectureUserRepository.save(new LectureUser(user.getId(), lectureId));
+        return true;
+    }
+    @Override
+    public void cancel(User user, Long lectureId) {
+         LectureUser lectureUser2 = findUser(user, lectureId);
+         lectureUserRepository.deleteById(lectureUser2.getluid());
+    }
+
+    public int countUser(Long lectureId){
+        return jdbcTemplate.queryForObject("SELECT count(*) FROM \"lecture_user\" WHERE LECTURE_ID =?",
+                int.class, new Object[]{lectureId});
+    }
+
+
 
 
 }

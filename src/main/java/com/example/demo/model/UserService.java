@@ -11,7 +11,10 @@ public interface UserService {
     //zmiana email
     User updateEmail(User user, Long id);
     //Zapis na prelekcje
-    User signUp(User user, Long lectureId, String email, String login);
+    boolean signUp(User user, Long lectureId);
 
-    User cancel(User user, Long lectureId);
+    LectureUser findUser(User user, Long id);
+    LectureUser findUser(User user, String[] id);
+    void cancel(User user, Long lectureId);
+    int countUser(Long lectureId);
 }

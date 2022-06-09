@@ -7,7 +7,9 @@ import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class LectureService {
@@ -29,16 +31,27 @@ public class LectureService {
         return lectureRepository.findAll();
     }
 
-    Lecture[] signUpForLecture1 = new Lecture[5];
 
+    public List<Lecture> findUserLectures(String login){
+        List<Lecture> lectureUser1 = null;
+        var k = String.format("SELECT \"lecture\".* FROM \"lecture_user\"\n" +
+                "JOIN \"lecture\" ON LECTURE_ID = \"lecture\".ID\n" +
+                "JOIN \"user\" ON USER_ID = \"user\".ID\n" +
+                "WHERE LOGIN  REGEXP '%s'", login);
+        try {
+            var result1 = jdbcTemplate.queryForList(k);
+            lectureUser1 = new ArrayList<Lecture>();
+            for(Map m: result1){
+                var l = new Lecture((String) m.get("lecture_end"), (String) m.get("lecture_start"), (Integer) m.get("path"));
+                l.setLectureDate((String) m.get("lecture_date"));
+                lectureUser1.add(l);
+            }
+        }
+        catch (Exception e){
 
-//    public Lecture saveLecture(Lecture lecture) {
-//        return (Lecture)this.jdbcTemplate.queryForObject("INSERT INTO \"Lecture\" WHERE login = ?", new BeanPropertyRowMapper(User.class), new Object[]{login});
-//    }
-
-
-//podaje id=1, nie może się ten sam zapisać na prelecje z id 2 i 3.
-
+        }
+        return lectureUser1;
+    }
 
 }
 
