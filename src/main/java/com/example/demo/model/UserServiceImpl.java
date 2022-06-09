@@ -62,7 +62,6 @@ public class UserServiceImpl implements UserService {
                 new BeanPropertyRowMapper(User.class), new Object[]{email});
     }
 
-
     public LectureUser findUser(User user, Long id){
         LectureUser lectureUser1 = null;
         try {
@@ -109,17 +108,12 @@ public class UserServiceImpl implements UserService {
         String email = "! Witamy na prelekcji nr: ";
         String filePath = "C:\\Users\\ladym\\IdeaProjects\\demo\\src\\main\\java\\com\\example\\demo\\model\\powiadomienie.txt";
         try {
-            byte[] strToBytes = (nowDate + " Użytkowniku " + lectureUser.getUserId()+ email +  lectureUser.getLectureId()).getBytes();
+            byte[] strToBytes = (nowDate + " Użytkowniku " + lectureUser.getUserId() + email +  lectureUser.getLectureId()).getBytes();
             Files.write(Paths.get(filePath), strToBytes);
         } catch (IOException e) {
             e.printStackTrace();
         }
-            return true;
+        return true;
     }
-
-
-
-
-
 
 }

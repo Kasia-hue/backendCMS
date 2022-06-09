@@ -19,12 +19,12 @@ public class Lecture {
     @Column(name = "`lectureDate`")
     private String lectureDate = "01.06.2022";
     @Column(name = "`path`")
-    private int path;
+    private Long path;
 
 
     public Lecture(){}
 
-    public Lecture(String lectureStart, String lectureEnd, int path) {
+    public Lecture(String lectureStart, String lectureEnd, Long path) {
         this.lectureStart = lectureStart;
         this.lectureEnd = lectureEnd;
         this.path = path;
@@ -46,16 +46,7 @@ public class Lecture {
         return lectureDate;
     }
 
-//    public User[] getParticipants() {
-//        return participants;
-//    }
-
-
-//    public void setParticipants(User[] participants) {
-//        this.participants = participants;
-//    }
-
-    public int getPath() {
+    public Long getPath() {
         return path;
     }
 

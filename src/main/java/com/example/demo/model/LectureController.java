@@ -32,4 +32,13 @@ public class LectureController {
         return new ResponseEntity<List<Lecture>>(lectureService.findUserLectures(login), HttpStatus.OK);
     }
 
+    @GetMapping("/percentOfUsersLecture")
+    public List<LectureService.KeyValue> percentOfUsersLecture (){
+        return lectureService.percentUsers();
+    }
+
+    @GetMapping("/percentOfUsersPath")
+    public List<LectureService.KeyValue> percentOfUsersPath (){
+        return lectureService.percentUsersPath();
+    }
 }

@@ -23,23 +23,23 @@ public class DemoApplication {
 		LectureRepository lectureRepository = configurableApplicationContext.getBean(LectureRepository.class);
 
 
-		Lecture lecture1 = new Lecture("10:00", "11:45", 1);
+		Lecture lecture1 = new Lecture("10:00", "11:45", 1L);
 		lectureRepository.save(lecture1);
-		Lecture lecture2 = new Lecture( "10:00", "11:45", 2);
+		Lecture lecture2 = new Lecture( "10:00", "11:45", 2L);
 		lectureRepository.save(lecture2);
-		Lecture lecture3 = new Lecture( "10:00", "11:45", 3);
+		Lecture lecture3 = new Lecture( "10:00", "11:45", 3L);
 		lectureRepository.save(lecture3);
-		Lecture lecture4 = new Lecture( "12:00", "13:45", 1);
+		Lecture lecture4 = new Lecture( "12:00", "13:45", 1L);
 		lectureRepository.save(lecture4);
-		Lecture lecture5 = new Lecture( "12:00", "13:45", 2);
+		Lecture lecture5 = new Lecture( "12:00", "13:45", 2L);
 		lectureRepository.save(lecture5);
-		Lecture lecture6 = new Lecture( "12:00", "13:45", 3);
+		Lecture lecture6 = new Lecture( "12:00", "13:45", 3L);
 		lectureRepository.save(lecture6);
-		Lecture lecture7 = new Lecture( "14:00", "15:45", 1);
+		Lecture lecture7 = new Lecture( "14:00", "15:45", 1L);
 		lectureRepository.save(lecture7);
-		Lecture lecture8 = new Lecture( "14:00", "15:45", 2);
+		Lecture lecture8 = new Lecture( "14:00", "15:45", 2L);
 		lectureRepository.save(lecture8);
-		Lecture lecture9 = new Lecture( "14:00", "15:45", 3);
+		Lecture lecture9 = new Lecture( "14:00", "15:45", 3L);
 		lectureRepository.save(lecture9);
 	}
 }
