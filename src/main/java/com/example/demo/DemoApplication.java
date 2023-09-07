@@ -1,17 +1,11 @@
 package com.example.demo;
 
 import com.example.demo.model.Lecture;
-import com.example.demo.model.LectureService;
 import com.example.demo.repo.LectureRepository;
-import com.example.demo.repo.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.web.bind.annotation.GetMapping;
 
-import java.util.ArrayList;
-import java.util.List;
 
 @SpringBootApplication
 public class DemoApplication {

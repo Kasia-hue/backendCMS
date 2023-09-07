@@ -1,7 +1,5 @@
 package com.example.demo.model;
 
-import com.example.demo.DemoApplication;
-import com.example.demo.repo.LectureRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,7 +27,7 @@ public class LectureController {
 
     @GetMapping({"/{login}"})
     public ResponseEntity<List<Lecture>> getUser (@PathVariable("login") String login){
-        return new ResponseEntity<List<Lecture>>(lectureService.findUserLectures(login), HttpStatus.OK);
+        return new ResponseEntity<>(lectureService.findUserLectures(login), HttpStatus.OK);
     }
 
     @GetMapping("/percentOfUsersLecture")

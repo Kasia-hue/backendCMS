@@ -1,11 +1,8 @@
 package com.example.demo.model;
 
 import com.example.demo.repo.LectureRepository;
-import com.example.demo.repo.UserRepository;
-import org.hibernate.mapping.KeyValue;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.util.Pair;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
@@ -50,7 +47,8 @@ public class LectureService {
                 lectureUser1.add(l);
             }
         }
-        catch (Exception e){
+        catch (DataAccessException e){
+            System.out.println(e.getMessage());
         }
         return lectureUser1;
     }
@@ -67,25 +65,25 @@ public class LectureService {
     }
     public List<KeyValue> percentUsers(){
         var v = String.format("SELECT LECTURE_ID, 1.0*count(USER_ID)/(SELECT COUNT (*) FROM" +
-                " \"user\") as \"ile\" FROM \"lecture_user\" group by LECTURE_ID");
+                " \"user\") as \"howMany\" FROM \"lecture_user\" group by LECTURE_ID");
         List<KeyValue> result = null;
         try {
             var result1 = jdbcTemplate.queryForList(v);
             result = new ArrayList<KeyValue>();
             for(Map m: result1){
-                var l = new KeyValue((Long) m.get("LECTURE_ID"), (BigDecimal)m.get("ile"));
+                var l = new KeyValue((Long) m.get("LECTURE_ID"), (BigDecimal)m.get("howMany"));
                 result.add(l);
             }
         }
-        catch (Exception e){
-            e.getMessage();
+        catch (DataAccessException e){
+            System.out.println(e.getMessage());
         }
         return result;
     }
 
 
     public List<KeyValue> percentUsersPath(){
-        var v1 = String.format("SELECT \"path\", 1.0*count(USER_ID)/(SELECT COUNT (*) FROM \"user\") as \"ile\" \n" +
+        var v1 = String.format("SELECT \"path\", 1.0*count(USER_ID)/(SELECT COUNT (*) FROM \"user\") as \"howMany\" \n" +
                 "FROM \"lecture_user\"\n" +
                 "JOIN \"lecture\" ON LECTURE_ID = ID \n" +
                 "group by \"path\"\n");
@@ -94,12 +92,12 @@ public class LectureService {
             var result12 = jdbcTemplate.queryForList(v1);
             result2 = new ArrayList<KeyValue>();
             for(Map m: result12){
-                var l = new KeyValue((Long) m.get("path"), (BigDecimal) m.get("ile"));
+                var l = new KeyValue((Long) m.get("path"), (BigDecimal) m.get("howMany"));
                 result2.add(l);
             }
         }
-        catch (Exception e){
-            e.getMessage();
+        catch (DataAccessException e){
+            System.out.println(e.getMessage());
         }
         return result2;
     }

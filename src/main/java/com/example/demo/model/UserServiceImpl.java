@@ -2,21 +2,16 @@ package com.example.demo.model;
 
 import com.example.demo.repo.LectureUserRepository;
 import com.example.demo.repo.UserRepository;
-import org.apache.tomcat.util.buf.StringUtils;
-import org.springframework.data.domain.Example;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
-import org.yaml.snakeyaml.util.ArrayUtils;
 
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.*;
-import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -26,6 +21,7 @@ public class UserServiceImpl implements UserService {
 
     private LectureUserRepository lectureUserRepository;
     private final JdbcTemplate jdbcTemplate;
+    private final SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
     public UserServiceImpl(UserRepository userRepository,  JdbcTemplate jtm, LectureUserRepository lectureUserRepository) {
         this.userRepository = userRepository;
@@ -35,7 +31,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User saveUser(User user) {
-        return (User)this.userRepository.save(user);
+        return this.userRepository.save(user);
     }
 
     @Override
@@ -52,12 +48,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findByLogin(String login) {
+    public User findByLogin(String login) throws ResourceNotFoundEx{
         return (User)this.jdbcTemplate.queryForObject("SELECT * FROM \"user\" WHERE login = ?",
                 new BeanPropertyRowMapper(User.class), new Object[]{login});
     }
 
-    public User findByEmail(String email) {//tak jak tu
+    public User findByEmail(String email) throws ResourceNotFoundEx{
         return (User)this.jdbcTemplate.queryForObject("SELECT * FROM \"user\" WHERE email = ?",
                 new BeanPropertyRowMapper(User.class), new Object[]{email});
     }
@@ -68,8 +64,8 @@ public class UserServiceImpl implements UserService {
             lectureUser1 = (LectureUser) jdbcTemplate.queryForObject("SELECT * FROM \"lecture_user\" WHERE USER_ID = ? AND LECTURE_ID  = ?",
                     new BeanPropertyRowMapper(LectureUser.class), new Object[]{user.getId()}, new Object[]{id});
         }
-        catch (Exception e){
-
+        catch (DataAccessException e){
+            System.out.println(e.getMessage());
         }
         return lectureUser1;
     }
@@ -81,12 +77,11 @@ public class UserServiceImpl implements UserService {
             lectureUser1 = (LectureUser) jdbcTemplate.queryForObject(String.format("SELECT * FROM \"lecture_user\" WHERE USER_ID = ? AND LECTURE_ID IN (%s)", replacer),
                     new BeanPropertyRowMapper(LectureUser.class), new Object[]{user.getId()});
         }
-        catch (Exception e){
-
+        catch (DataAccessException e){
+            System.out.println(e.getMessage());
         }
         return lectureUser1;
     }
-
 
     public boolean signUp(User user, Long lectureId){
         lectureUserRepository.save(new LectureUser(user.getId(), lectureId));
@@ -103,12 +98,12 @@ public class UserServiceImpl implements UserService {
                 int.class, new Object[]{lectureId});
     }
 
-    public boolean emailMsg(LectureUser lectureUser) throws IOException {
+    public boolean emailMsg(LectureUser lectureUser) {
         Date nowDate = new Date();
-        String email = "! Witamy na prelekcji nr: ";
-        String filePath = "C:\\Users\\ladym\\IdeaProjects\\demo\\src\\main\\java\\com\\example\\demo\\model\\powiadomienie.txt";
+        String msg = "! Welcome! This is lecture: ";
+        String filePath = "C:\\Users\\ladym\\IdeaProjects\\demo\\src\\main\\java\\com\\example\\demo\\model\\notification.txt";
         try {
-            byte[] strToBytes = (nowDate + " Użytkowniku " + lectureUser.getUserId() + email +  lectureUser.getLectureId()).getBytes();
+            byte[] strToBytes = (formatter.format(nowDate) + " User id:  " + lectureUser.getUserId() + msg +  lectureUser.getLectureId()).getBytes();
             Files.write(Paths.get(filePath), strToBytes);
         } catch (IOException e) {
             e.printStackTrace();
